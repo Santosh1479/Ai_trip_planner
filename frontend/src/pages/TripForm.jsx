@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { planTrip } from '../api';
-import LoadingDots from './LoadingDots';
+import LoadingDots from '../components/LoadingDots';
 
 export default function TripForm({ onPlanned }) {
   const [form, setForm] = useState({

@@ -2,10 +2,10 @@
   "name": "ai-travel-planner",
   "version": "1.0.0",
   "description": "An AI-powered travel planner that offers personalized recommendations and smooth trip management.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
