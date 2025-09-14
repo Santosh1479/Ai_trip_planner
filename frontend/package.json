@@ -1,0 +1,22 @@
+{
+  "name": "ai-travel-planner-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for AI-powered travel planner.",
+  "main": "src/main.jsx",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "vite": "^4.0.0"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
