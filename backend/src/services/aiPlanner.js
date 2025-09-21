@@ -19,7 +19,7 @@ exports.generateItinerary = async ({
 
     // Build prompt
     const prompt = `
-Plan a detailed ${numberOfDays}-day trip itinerary for me.
+Plan a detailed ${numberOfDays}-day trip itinerary for me as a journey path.
 
 Details:
 - Starting point: ${startingPoint}
@@ -30,9 +30,10 @@ Details:
 - Interests: ${interests}
 
 Instructions:
-- Create a day-by-day plan with at least 3 activities per day (morning, afternoon, evening).
-- Each activity should include: name, time, description, location, approximate cost, and travel/transportation tips.
-- Suggest local food/restaurants or cultural experiences each day.
+- Structure each day as a path: start at the starting point (or previous day's end), then list each activity as a stop along the way, and end at the day's final location.
+- For each activity (stop), include: name, time, description, location, approximate cost, and travel/transportation tips.
+- Clearly indicate the start and end for each day.
+- Suggest local food/restaurants or cultural experiences as stops.
 - Balance sightseeing, relaxation, and travel time so the trip feels enjoyable, not rushed.
 - IMPORTANT: Return only valid JSON in the following schema:
 
@@ -50,14 +51,28 @@ Instructions:
     {
       "day": 1,
       "date": "...",
-      "activities": [
+      "path": [
         {
+          "type": "start",
+          "location": "...",
+          "time": "...",
+          "note": "Trip begins"
+        },
+        {
+          "type": "activity",
           "name": "...",
           "time": "...",
           "description": "...",
           "location": "...",
           "cost": "...",
           "transportationTips": "..."
+        },
+        // ...more activities...
+        {
+          "type": "end",
+          "location": "...",
+          "time": "...",
+          "note": "Day ends"
         }
       ]
     }
