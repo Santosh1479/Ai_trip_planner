@@ -9,8 +9,9 @@ import UserSignup from "./pages/UserSignup";
 import UserProtectWrapper from "./pages/UserProtectWrapper";
 import UserLogout from "./pages/UserLogout";
 import UserContext from "./context/UserContext";
+import TripDetails from './pages/TripDetails';
 
-export default function App() {
+export function App() {
   const [trip, setTrip] = useState(null);
 
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Start />} />
           <Route path="/Tripform" element={<TripForm />} />
+          <Route path="/trip/:id" element={<TripDetails />} />
           <Route path="/login" element={<UserLogin />} />
           <Route path="/signup" element={<UserSignup />} />
           <Route
@@ -42,3 +44,4 @@ export default function App() {
     </UserContext>
   );
 }
+export default App;
