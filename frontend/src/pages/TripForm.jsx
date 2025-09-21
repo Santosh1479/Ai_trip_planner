@@ -4,13 +4,13 @@ import LoadingDots from '../components/LoadingDots';
 
 export default function TripForm({ onPlanned = () => {} }) {
   const [form, setForm] = useState({
-    startDate: '2024-09-22',
-    endDate: '2024-09-23',
-    destination: 'Bangalore',
-    startingPoint: 'Bangalore',
-    travelers: 2,
-    budgetStyle: 'Moderate',
-    interests: 'shopping',
+    startDate: '',
+    endDate: '',
+    destination: '',
+    startingPoint: '',
+    travelers: 0,
+    budgetStyle: '',
+    interests: '',
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
