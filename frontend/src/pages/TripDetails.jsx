@@ -18,18 +18,16 @@ export default function TripDetails() {
   }, [id]);
 
   if (loading)
-    return <div className="text-center mt-10">Loading your trip details...</div>;
-  if (!trip)
-    return <div className="text-center mt-10">Trip not found.</div>;
+    return (
+      <div className="text-center mt-10">Loading your trip details...</div>
+    );
+  if (!trip) return <div className="text-center mt-10">Trip not found.</div>;
 
-  // Normalize data: Gemini returns `itinerary: [{ days: [...] }]`
+  // Normalize data from Gemini
   const tripData = trip.tripSummary ? trip : trip[0] || trip;
   const days =
-    tripData.itinerary && tripData.itinerary.length > 0
-      ? tripData.itinerary[0].days
-      : [];
+    tripData.days || (tripData.itinerary && tripData.itinerary[0]?.days) || [];
 
-  // Normalize path or activities
   const getDayPath = (day) =>
     day.path || day.activities?.map((a) => ({ ...a, type: "activity" })) || [];
 
@@ -41,8 +39,8 @@ export default function TripDetails() {
         {tripData.tripSummary?.destination || tripData.destination}
         <br />
         <strong>Dates:</strong>{" "}
-        {(tripData.tripSummary?.startDate || tripData.startDate)} to{" "}
-        {(tripData.tripSummary?.endDate || tripData.endDate)}
+        {tripData.tripSummary?.startDate || tripData.startDate} to{" "}
+        {tripData.tripSummary?.endDate || tripData.endDate}
         <br />
         <strong>Travelers:</strong>{" "}
         {tripData.tripSummary?.travelers || tripData.travelers}
@@ -58,7 +56,28 @@ export default function TripDetails() {
             : tripData.interests)}
       </div>
 
-      <h3 className="text-xl font-semibold mb-6 text-green-700">Itinerary Path</h3>
+      <h3 className="text-xl font-semibold mb-6 text-green-700">
+        Itinerary Path
+      </h3>
+
+      {/* ✈️ Book Flights Button before trip starts */}
+      {tripData.tripSummary?.startingPoint &&
+        tripData.tripSummary?.destination &&
+        tripData.tripSummary.startingPoint !==
+          tripData.tripSummary.destination && (
+          <a
+            href={`https://www.amadeus.com/en/flights?origin=${encodeURIComponent(
+              tripData.tripSummary.startingPoint
+            )}&destination=${encodeURIComponent(
+              tripData.tripSummary.destination
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-6 inline-block"
+          >
+            ✈️ Book Flights
+          </a>
+        )}
 
       {days.length > 0 ? (
         days.map((day, idx) => (
@@ -104,16 +123,22 @@ export default function TripDetails() {
                             Start:
                           </span>{" "}
                           {step.location}
-                          <div className="text-xs text-gray-500">{step.time}</div>
+                          <div className="text-xs text-gray-500">
+                            {step.time}
+                          </div>
                           {step.note && (
-                            <div className="text-xs text-gray-400">{step.note}</div>
+                            <div className="text-xs text-gray-400">
+                              {step.note}
+                            </div>
                           )}
                         </div>
                       )}
                       {step.type === "activity" && (
                         <div>
                           <span className="font-semibold">{step.name}</span>
-                          <div className="text-xs text-gray-500">{step.time}</div>
+                          <div className="text-xs text-gray-500">
+                            {step.time}
+                          </div>
                           <div className="text-xs">{step.description}</div>
                           {step.location && (
                             <div className="text-xs text-gray-600">
@@ -121,7 +146,9 @@ export default function TripDetails() {
                             </div>
                           )}
                           {step.cost && (
-                            <div className="text-xs text-gray-600">💰 {step.cost}</div>
+                            <div className="text-xs text-gray-600">
+                              💰 {step.cost}
+                            </div>
                           )}
                           {step.transportationTips && (
                             <div className="text-xs text-gray-600">
@@ -132,11 +159,17 @@ export default function TripDetails() {
                       )}
                       {step.type === "end" && (
                         <div>
-                          <span className="font-semibold text-red-600">End:</span>{" "}
+                          <span className="font-semibold text-red-600">
+                            End:
+                          </span>{" "}
                           {step.location}
-                          <div className="text-xs text-gray-500">{step.time}</div>
+                          <div className="text-xs text-gray-500">
+                            {step.time}
+                          </div>
                           {step.note && (
-                            <div className="text-xs text-gray-400">{step.note}</div>
+                            <div className="text-xs text-gray-400">
+                              {step.note}
+                            </div>
                           )}
                         </div>
                       )}
@@ -145,6 +178,31 @@ export default function TripDetails() {
                 ))}
               </div>
             </div>
+
+            {/* 🏨 Book Hotels Button after each day */}
+            {getDayPath(day).length > 0 && (
+              <div className="mt-4">
+                {(() => {
+                  const firstLocationStep = getDayPath(day).find(
+                    (step) => step.location
+                  );
+                  const hotelCity =
+                    firstLocationStep?.location?.split(",")[0].trim() || // take city only
+                    tripData.tripSummary?.destination?.split(",")[0].trim() ||
+                    "";
+                  return (
+                    <a
+                      href="https://www.amadeus.com/en/hotels"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mt-3 inline-block"
+                    >
+                      🏨 Book Hotels
+                    </a>
+                  );
+                })()}
+              </div>
+            )}
           </div>
         ))
       ) : (
